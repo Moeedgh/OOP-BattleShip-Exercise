@@ -1,6 +1,8 @@
 import java.util.Scanner;
 public class Game {
     private int GRID_SIZE;
+    private Scanner scanner = new Scanner(System.in);
+    private Scanner inputInt = new Scanner(System.in);
     public void start() {
         boolean playAgain;
         do {
@@ -11,7 +13,6 @@ public class Game {
 
     private boolean askReplay() {
         System.out.println("Play again? (yes/no)");
-        Scanner scanner = new Scanner(System.in);
         return scanner.next().equalsIgnoreCase("yes");
     }
 
@@ -20,10 +21,10 @@ public class Game {
         mainMenu();
     }
     private void singleMode(){
-
+        System.out.println("***** Single mode *****");
     }
     private void versusMode(){
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("***** Versus Mode *****");
         this.GRID_SIZE=gridSizeMenu();
         System.out.println("Player1, please enter your name:");
         String player1Name=scanner.nextLine();
@@ -35,35 +36,13 @@ public class Game {
         player2.playerGrid.initializeGrid();
         player1.playerTrackingGrid.initializeGrid();
         player2.playerTrackingGrid.initializeGrid();
-
-        System.out.println(player1.getPlayerName()+", do you want to place ships randomly? (yes/no)");
-        String option = scanner.nextLine();
-        while (!option.equalsIgnoreCase("yes") && !option.equalsIgnoreCase("no")) {
-            System.out.println("Invalid option. Try again.");
-            option = scanner.nextLine();
-        }
-        if (option.equalsIgnoreCase("yes")) {
-            placeShipRandomly(player1);
-        }
-        else {
-            placeShipManually(player1);
-        }
-        System.out.println(player2.getPlayerName()+", do you want to place ships randomly? (yes/no)");
-        option = scanner.nextLine();
-        while (!option.equalsIgnoreCase("yes") && !option.equalsIgnoreCase("no")) {
-            System.out.println("Invalid option. Try again.");
-            option = scanner.nextLine();
-        }
-        if (option.equalsIgnoreCase("yes")) {
-            placeShipRandomly(player2);
-        }
-        else {
-            placeShipManually(player2);
-        }
-
+        Board.generateShips(GRID_SIZE);
+        choosePlaceShipMenu(player1);
+        choosePlaceShipMenu(player2);
+        Utils.shipsInfo(player1.playerGrid);
         boolean player1Turn = true;
-//        player1.playerGrid.printBoard();
-//        player2.playerGrid.printBoard();
+        player1.playerGrid.printBoard();
+        player2.playerGrid.printBoard();
          do{
             if (player1Turn) {
                 System.out.println(player1.getPlayerName()+"'s turn:");
@@ -75,7 +54,7 @@ public class Game {
                 player2.playerTurn(player1.playerGrid);
             }
             player1Turn = !player1Turn;
-        }while (!isGameOver(player1.playerGrid, player2.playerGrid));
+        }while (!isGameOver(player1, player2));
 
         System.out.println("Game Over!");
 
@@ -86,9 +65,7 @@ public class Game {
         System.out.println("Select an option :");
         System.out.println("1. 1 VS (AI)  [Single Mode]");
         System.out.println("2. 1 VS 1 [Versus Mode]");
-        Scanner scanner = new Scanner(System.in);
-        int option = scanner.nextInt();
-        scanner.nextLine();
+        int option = inputInt.nextInt();
         if (option == 1) singleMode();
         else {
             if (option == 2) versusMode();
@@ -99,33 +76,39 @@ public class Game {
         }
     }
     private int gridSizeMenu(){
-        System.out.println("What should be the dimensions of the game's grid? (note that grid size must be between 4 and 27): ");
-        Scanner scanner = new Scanner(System.in);
-        int GRID_SIZE = scanner.nextInt();
-        scanner.nextLine();
+        System.out.println("What should be the dimensions of the game's grid? (note that grid size must be between 5 and 27): ");
+        int GRID_SIZE = inputInt.nextInt();
         if (GRID_SIZE <= 5 || GRID_SIZE >= 27) {
             System.out.println("Invalid dimensions. Try again.");
             gridSizeMenu();
         }
         return GRID_SIZE;
     }
-    private void placeShipRandomly(Player player){
-        player.playerGrid.generateShips();
-        for (Ship ship : player.playerGrid.getShips()) {
-            ShipPlacer.placeShipRandomly(player.playerGrid,ship);
-        }
-    }
-    private void placeShipManually(Player player){
-        player.playerGrid.generateShips();
-        for (Ship ship : player.playerGrid.getShips()) {
-            ShipPlacer.placeShipRandomly(player.playerGrid,ship);
-        }
-    }
-    private boolean isGameOver(Board player1Board, Board player2Board2) {
-        if(player1Board.allShipSunk() || player2Board2.allShipSunk())
-            return true;
-        else return false;
-    }
 
+    private boolean isGameOver(Player player1, Player player2) {
+        if(player1.playerGrid.allShipSunk()){
+            System.out.println(player1.getPlayerName()+" Won!! 🎉");
+            return true;
+        }
+        if(player2.playerGrid.allShipSunk()){
+            System.out.println(player1.getPlayerName()+" Won!! 🎉");
+            return true;
+        }
+        return false;
+    }
+    private void choosePlaceShipMenu(Player player){
+        System.out.println(player.getPlayerName()+", Choose one of the options below to place ships: ");
+        System.out.println("1. Place Ship Randomly");
+        System.out.println("2. Place Ship Manually");
+        int option = inputInt.nextInt();
+        if (option == 1) Utils.placeShipRandomly(player);
+        else{
+            if (option == 2) Utils.placeShipManually(player);
+            else {
+                System.out.println("Invalid option. Try again.");
+                choosePlaceShipMenu(player);
+            }
+        }
+    }
 
 }

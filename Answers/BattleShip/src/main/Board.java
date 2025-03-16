@@ -4,12 +4,11 @@ import java.util.Random;
 public class Board {
     private char[][] grid;
     private final int size;
-    public ArrayList<Ship> ships;
+    public static ArrayList<Ship> ships= new ArrayList<>();
 
     public Board(int size) {
         this.size = size;
         this.grid = new char[size][size];
-        this.ships = new ArrayList<>();
     }
 
     public int getSize() {
@@ -49,25 +48,26 @@ public class Board {
         return ships;
     }
 
-    public void generateShips() {
-        final int[] SHIP_SIZES = {5, 4, 3, 2};
+    public static void generateShips(int size) {
+        final int[] SHIP_SIZES = {2,3,4,5,6};
         final double SHIP_AREA_RATIO = 0.25;
         int totalBoardArea = size * size;
         int totalShipArea = (int) (totalBoardArea * SHIP_AREA_RATIO);
 
         Random rand = new Random();
         int remainingArea = totalShipArea;
-
-        while (remainingArea > 0) {
-            int shipSize = SHIP_SIZES[rand.nextInt(SHIP_SIZES.length)];
+        int i=0;
+        while (remainingArea > 1) {
+            if(i==4)
+                i=0;
+            int shipSize = SHIP_SIZES[i];
             if (shipSize > remainingArea) {
-                if (remainingArea==1)
-                    break;
                 shipSize = remainingArea;
             }
             Ship ship = new Ship(shipSize);
             ships.add(ship);
             remainingArea -= shipSize;
+            i++;
         }
     }
     public boolean placeShip(Ship ship,int row,int col,boolean horizontal) {
@@ -147,7 +147,7 @@ public class Board {
         }
     }
 
-    public boolean allShipSunk(){
+    public boolean allShipSunk(){//Utils
         for(Ship ship:ships) {
             if(ship.getHealth()!=0){
                 return false;

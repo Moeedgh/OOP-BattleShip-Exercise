@@ -27,8 +27,14 @@ public class Player {
         if(Utils.isValidInput(target)) {
             if (coordinate.isWater(playerTrackingGrid)){
                 if(coordinate.attack(opponentGrid,playerTrackingGrid)){
-                    playerTrackingGrid.printBoard();
-                    playerTurn(opponentGrid);
+                    if(opponentGrid.allShipSunk()){
+                        return;
+                    }
+                    else {
+                        System.out.println(playerName+"'s turn:");
+                        playerTrackingGrid.printBoard();
+                        playerTurn(opponentGrid);
+                    }
                 }
 
             }

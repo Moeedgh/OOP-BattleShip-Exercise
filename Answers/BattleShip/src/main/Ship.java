@@ -45,7 +45,7 @@ public class Ship {
             return true;
         return false;
     }
-    public void shipSunkEffect(Board trackingGrid){
+    public void shipSunkEffect(Board trackingGrid){       //Utils
         int boardSize = trackingGrid.getSize();
         char[][] grid=trackingGrid.getGrid();
         int row = shipPosition[0][0];
