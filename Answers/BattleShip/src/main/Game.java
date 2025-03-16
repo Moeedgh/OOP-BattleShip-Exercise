@@ -29,8 +29,8 @@ public class Game {
         String player1Name=scanner.nextLine();
         System.out.println("Player2, please enter your name:");
         String player2Name=scanner.nextLine();
-        Player player1 = new Player(player1Name);
-        Player player2 = new Player(player2Name);
+        Player player1 = new Player(player1Name, GRID_SIZE);
+        Player player2 = new Player(player2Name, GRID_SIZE);
         player1.playerGrid.initializeGrid();
         player2.playerGrid.initializeGrid();
         player1.playerTrackingGrid.initializeGrid();
@@ -62,8 +62,9 @@ public class Game {
         }
 
         boolean player1Turn = true;
-
-        while (!isGameOver()) {
+//        player1.playerGrid.printBoard();
+//        player2.playerGrid.printBoard();
+         do{
             if (player1Turn) {
                 System.out.println(player1.getPlayerName()+"'s turn:");
                 player1.playerTrackingGrid.printBoard();
@@ -74,7 +75,7 @@ public class Game {
                 player2.playerTurn(player1.playerGrid);
             }
             player1Turn = !player1Turn;
-        }
+        }while (!isGameOver(player1.playerGrid, player2.playerGrid));
 
         System.out.println("Game Over!");
 
@@ -101,49 +102,30 @@ public class Game {
         System.out.println("What should be the dimensions of the game's grid? (note that grid size must be between 4 and 27): ");
         Scanner scanner = new Scanner(System.in);
         int GRID_SIZE = scanner.nextInt();
-        if (GRID_SIZE < 4 || GRID_SIZE < 27) {
+        scanner.nextLine();
+        if (GRID_SIZE <= 5 || GRID_SIZE >= 27) {
             System.out.println("Invalid dimensions. Try again.");
             gridSizeMenu();
         }
         return GRID_SIZE;
     }
     private void placeShipRandomly(Player player){
-        ShipPlacer shipPlacer = new ShipPlacer();
-        int maxShipSize;
-        if (GRID_SIZE % 2 == 0) {
-            maxShipSize = GRID_SIZE / 2;
-        }
-        else {
-            maxShipSize = GRID_SIZE / 2 + 1;
-        }
-        for (int i = maxShipSize; i>1; i--) {
-            Ship ship=new Ship(i);
-            player.playerGrid.ships.add(ship);
-            shipPlacer.placeShipRandomly(player.playerGrid, ship);
+        player.playerGrid.generateShips();
+        for (Ship ship : player.playerGrid.getShips()) {
+            ShipPlacer.placeShipRandomly(player.playerGrid,ship);
         }
     }
     private void placeShipManually(Player player){
-        ShipPlacer shipPlacer = new ShipPlacer();
-        int maxShipSize;
-        if (GRID_SIZE % 2 == 0) {
-            maxShipSize = GRID_SIZE / 2;
-        }
-        else {
-            maxShipSize = GRID_SIZE / 2 + 1;
-        }
-        for (int i = maxShipSize; i>1; i--) {
-            Ship ship=new Ship(i);
-            shipPlacer.placeShipManually(player.playerGrid, ship);
+        player.playerGrid.generateShips();
+        for (Ship ship : player.playerGrid.getShips()) {
+            ShipPlacer.placeShipRandomly(player.playerGrid,ship);
         }
     }
-    private boolean isGameOver(){
-        return false;
+    private boolean isGameOver(Board player1Board, Board player2Board2) {
+        if(player1Board.allShipSunk() || player2Board2.allShipSunk())
+            return true;
+        else return false;
     }
 
-
-
-    public int getGRID_SIZE(){
-        return this.GRID_SIZE;
-    }
 
 }

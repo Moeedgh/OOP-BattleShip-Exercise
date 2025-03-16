@@ -1,6 +1,6 @@
 public class Utils {
 
-    public boolean isValidInput(String input) {
+    public static boolean isValidInput(String input) {
         if (input.length() != 2) return false;
         char col = input.charAt(0);
         char row = input.charAt(1);

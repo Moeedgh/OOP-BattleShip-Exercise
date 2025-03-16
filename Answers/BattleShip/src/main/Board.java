@@ -2,13 +2,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Board {
-    private static char[][] grid;
-    private int size;
+    private char[][] grid;
+    private final int size;
     public ArrayList<Ship> ships;
 
     public Board(int size) {
         this.size = size;
         this.grid = new char[size][size];
+        this.ships = new ArrayList<>();
     }
 
     public int getSize() {
@@ -30,9 +31,9 @@ public class Board {
         }
     }
     public void printBoard() {
-        System.out.print(" ");
-        for (char i = 'A'; i < size; i++) {
-            System.out.print(i + " ");
+        System.out.print("  ");
+        for (int i = 65; i < 65+size; i++) {
+            System.out.print((char) i + " ");
         }
         System.out.println();
         for (int i = 0; i < size; i++) {
@@ -43,38 +44,56 @@ public class Board {
             System.out.println();
         }
     }
+
+    public  ArrayList<Ship> getShips() {
+        return ships;
+    }
+
+    public void generateShips() {
+        final int[] SHIP_SIZES = {5, 4, 3, 2};
+        final double SHIP_AREA_RATIO = 0.25;
+        int totalBoardArea = size * size;
+        int totalShipArea = (int) (totalBoardArea * SHIP_AREA_RATIO);
+
+        Random rand = new Random();
+        int remainingArea = totalShipArea;
+
+        while (remainingArea > 0) {
+            int shipSize = SHIP_SIZES[rand.nextInt(SHIP_SIZES.length)];
+            if (shipSize > remainingArea) {
+                if (remainingArea==1)
+                    break;
+                shipSize = remainingArea;
+            }
+            Ship ship = new Ship(shipSize);
+            ships.add(ship);
+            remainingArea -= shipSize;
+        }
+    }
     public boolean placeShip(Ship ship,int row,int col,boolean horizontal) {
         int[][] shipPosition=ship.getShipPosition();
         if(canPlaceShip(ship,row,col,horizontal)) {
             if(horizontal) {
+                ship.setHorizontal(true);
                 for(int j=0;j<ship.getSize();j++) {
                     grid[row][col+j]='X';
                 }
                 for(int i=0;i<ship.getSize();i++) {
-                    for(int j=0;j<2;j++) {
-                        if(j==0){
-                            shipPosition[i][j]=row;
-                        }
-                        else{
-                            shipPosition[i][j]=col+i;
-                        }
-                    }
+                    shipPosition[i][0]=row;
+                    shipPosition[i][1]=col+i;
                 }
                 ship.setShipPosition(shipPosition);
                 return true;
             }
             else {
+                ship.setHorizontal(false);
                 for(int i=0;i<ship.getSize();i++) {
                     grid[row+i][col]='X';
                 }
                 for(int i=0;i<ship.getSize();i++) {
                     for(int j=0;j<2;j++) {
-                        if(j==0){
-                            shipPosition[i][j]=row+i;
-                        }
-                        else{
-                            shipPosition[i][j]=col;
-                        }
+                        shipPosition[i][0]=row+i;
+                        shipPosition[i][1]=col;
                     }
                 }
                 ship.setShipPosition(shipPosition);
@@ -84,10 +103,10 @@ public class Board {
         return false;
 
     }
-    private static boolean canPlaceShip(Ship ship,int row,int col,boolean horizontal) {
+    private boolean canPlaceShip(Ship ship,int row,int col,boolean horizontal) {
         if (horizontal) {
             for(int j=0;j<ship.getSize();j++) {
-                if(col+j==10)
+                if(col+j==size)
                     return false;
                 if (grid[row][col+j] == 'X') {
                     return false;
@@ -98,7 +117,7 @@ public class Board {
                     if(i==0 && (j>=0 && j<ship.getSize())) {
                         continue;
                     }
-                    if((row+i>=0 && row+i<10 ) && (col+j>=0 && col+j<10)){
+                    if((row+i>=0 && row+i<size ) && (col+j>=0 && col+j<size)){
                         if (grid[row+i][col+j] == 'X') {
                             return false;
                         }
@@ -109,7 +128,7 @@ public class Board {
         }
         else {
             for(int i=0;i<ship.getSize();i++) {
-                if (row+i==10)
+                if (row+i==size)
                     return false;
                 if(grid[row+i][col]=='X')
                     return false;
@@ -118,7 +137,7 @@ public class Board {
                 for (int j=-1;j<2;j++){
                     if(j==0 && (i>=0 && i<ship.getSize()))
                         continue;
-                    if ((row+i>=0 && row+i<10 ) && (col+j>=0 && col+j<10)){
+                    if ((row+i>=0 && row+i<size ) && (col+j>=0 && col+j<size)){
                         if (grid[row+i][col+j] == 'X')
                             return false;
                     }
@@ -128,4 +147,12 @@ public class Board {
         }
     }
 
+    public boolean allShipSunk(){
+        for(Ship ship:ships) {
+            if(ship.getHealth()!=0){
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -15,19 +15,40 @@ public class Coordinate {
     public int getCol() {
         return col;
     }
-    public void missOrHit(Board opponentGrid, Board trackingGrid) {
+    public boolean attack(Board opponentGrid, Board trackingGrid) {
         char[][] opponetBoard=opponentGrid.getGrid();
         char[][] trackingBoard=trackingGrid.getGrid();
         if(opponetBoard[row][col]=='X') {
             trackingBoard[row][col]='X';
             System.out.println("Hit!");
+            for (Ship ship : opponentGrid.getShips()) {
+                int[][] shipPosition = ship.getShipPosition();
+                for(int i=0;i<ship.getSize();i++) {
+                    if(shipPosition[i][0]==row && shipPosition[i][1]==col) {
+                        int health=ship.getHealth();
+                        health--;
+                        ship.setHealth(health);
+                        if(ship.isShipSunk()){
+                            System.out.println("Excellent!! a Ship of size "+ship.getSize()+" sank!");
+                            ship.shipSunkEffect(trackingGrid);
+                        }
+                    }
+                }
+
+            }
+            opponentGrid.setGrid(opponetBoard);
+            trackingGrid.setGrid(trackingBoard);
+            System.out.println("Nice! as a bonus, you get another shot!");
+            return true;
+
         }
         else {
             trackingBoard[row][col]='O';
             System.out.println("Miss!");
+            opponentGrid.setGrid(opponetBoard);
+            trackingGrid.setGrid(trackingBoard);
         }
-        opponentGrid.setGrid(opponetBoard);
-        trackingGrid.setGrid(trackingBoard);
+        return false;
     }
     public boolean isWater(Board trackingGrid) {
         char[][] trackingBoard=trackingGrid.getGrid();
