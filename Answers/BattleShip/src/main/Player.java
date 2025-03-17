@@ -21,11 +21,9 @@ public class Player {
     public void playerTurn(Board opponentGrid) {
         System.out.print("Enter target (for example B1):");
         String target = scanner.next();
-        Coordinate coordinate= new Coordinate();
-        coordinate.stringToCoordinate(target);
-
+        Coordinate coordinate= new Coordinate(target);
         if(Utils.isValidInput(target)) {
-            if (coordinate.isWater(playerTrackingGrid)){
+            if (coordinate.isWater(playerTrackingGrid)){// if hit , player shot again.
                 if(coordinate.attack(opponentGrid,playerTrackingGrid)){
                     if(opponentGrid.allShipSunk()){
                         return;

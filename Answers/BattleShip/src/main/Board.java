@@ -54,19 +54,18 @@ public class Board {
         int totalBoardArea = size * size;
         int totalShipArea = (int) (totalBoardArea * SHIP_AREA_RATIO);
 
-        Random rand = new Random();
-        int remainingArea = totalShipArea;
+
         int i=0;
-        while (remainingArea > 1) {
+        while (totalShipArea > 1) {
             if(i==4)
                 i=0;
             int shipSize = SHIP_SIZES[i];
-            if (shipSize > remainingArea) {
-                shipSize = remainingArea;
+            if (shipSize > totalShipArea) {
+                continue;
             }
             Ship ship = new Ship(shipSize);
             ships.add(ship);
-            remainingArea -= shipSize;
+            totalShipArea -= shipSize;
             i++;
         }
     }

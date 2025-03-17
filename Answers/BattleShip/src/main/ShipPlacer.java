@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class ShipPlacer {
     public static void placeShipRandomly(Board board, Ship ship) {
@@ -15,6 +16,55 @@ public class ShipPlacer {
         }
     }
     public static void placeShipManually(Board board, Ship ship) {
+        Scanner scanner = new Scanner(System.in);
+        boolean horizontal;
+        Coordinate coordinate;
+        System.out.println("Your Board :");
+        board.printBoard();
+        System.out.print("\nShip's size :"+ship.getSize());
+        do {
+            System.out.println("Please enter a valid coordinate that you want to place ship:");
+            String coord = scanner.next();
+            if (Utils.isValidInput(coord)) {
+                coordinate = new Coordinate(coord);
+                if (coordinate.isWater(board)) {
+                    break;
+                }
+                else {
+                    System.out.println("This coordinate is not a water, please try again.");
+                }
+            }
+            else{
+                System.out.println("Invalid coordinate, please try again.");
+            }
+        }while (true);
 
+
+        do {
+            System.out.println("PLace Ship horizontal or vertical ? ( 'H' for horizontal ship and 'V' for vertical ship) ");
+            char inputChar = scanner.next().charAt(0);
+            if (inputChar == 'H') {
+                horizontal = true;
+                break;
+            }
+            else{
+                if (inputChar == 'V') {
+                    horizontal = false;
+                    break;
+                }
+                else{
+                    System.out.println("Invalid character, please try again.");
+                }
+            }
+        }while (true);
+        boolean placed = board.placeShip(ship,coordinate.getRow(),coordinate.getCol(),horizontal);
+        if (placed) {
+            System.out.println("Ship Placed successfully.");
+        }
+        else {
+            System.out.println("!!!!! Error placing ship !!!!!.");
+            System.out.println("Can't place ship, please try again.");
+            placeShipManually(board, ship);
+        }
     }
 }

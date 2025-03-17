@@ -1,7 +1,7 @@
 public class Coordinate {
     private int row;
     private int col;
-    public void stringToCoordinate(String target) {
+    public Coordinate(String target) {
         char colChar = target.charAt(0);
         char rowChar = target.charAt(1);
         this.row=rowChar-'0';

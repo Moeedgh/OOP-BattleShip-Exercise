@@ -16,6 +16,7 @@ public class Utils {
         }
     }
     public static void placeShipManually(Player player){//Utils
+        System.out.println("********* PLACING SHIP MANUALLY *********");
         for (Ship ship : player.playerGrid.getShips()) {
             ShipPlacer.placeShipManually(player.playerGrid,ship);
         }

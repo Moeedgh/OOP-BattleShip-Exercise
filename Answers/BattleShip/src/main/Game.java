@@ -1,14 +1,11 @@
 import java.util.Scanner;
 public class Game {
-    private int GRID_SIZE;
+    private int GRID_SIZE=10;
     private Scanner scanner = new Scanner(System.in);
     private Scanner inputInt = new Scanner(System.in);
     public void start() {
-        boolean playAgain;
-        do {
-            playGame();
-            playAgain = askReplay();
-        } while (playAgain);
+        mainMenu();
+        System.out.println("GAME OVER!");
     }
 
     private boolean askReplay() {
@@ -17,15 +14,38 @@ public class Game {
     }
 
     private void playGame() {
-        System.out.println("***** Welcome to Battle Ship Game! *****");
-        mainMenu();
+        gameTypeMenu();
     }
     private void singleMode(){
-        System.out.println("***** Single mode *****");
+        System.out.println("Please enter your name:");
+        String playerName=scanner.nextLine();
+        Player player = new Player(playerName, GRID_SIZE);
+        AIPlayer aiPlayer= new AIPlayer("AI",GRID_SIZE);
+        player.playerGrid.initializeGrid();
+        aiPlayer.playerGrid.initializeGrid();
+        player.playerTrackingGrid.initializeGrid();
+        aiPlayer.playerTrackingGrid.initializeGrid();
+        Board.generateShips(GRID_SIZE);
+        choosePlaceShipMenu(player);
+        choosePlaceShipMenu(aiPlayer);
+        Utils.shipsInfo(player.playerGrid);
+        boolean playerTurn = true;
+        do{
+            if (playerTurn) {
+                System.out.println(player.getPlayerName()+"'s turn:");
+                player.playerTrackingGrid.printBoard();
+                player.playerTurn(aiPlayer.playerGrid);
+            } else {
+                System.out.println(aiPlayer.getPlayerName()+"'s turn:");
+                aiPlayer.playerTrackingGrid.printBoard();
+                aiPlayer.aiTurn(player.playerGrid);
+            }
+            playerTurn = !playerTurn;
+        }while (!isGameOver(player, aiPlayer));
+
     }
     private void versusMode(){
-        System.out.println("***** Versus Mode *****");
-        this.GRID_SIZE=gridSizeMenu();
+        System.out.println("******** Versus Mode ********");
         System.out.println("Player1, please enter your name:");
         String player1Name=scanner.nextLine();
         System.out.println("Player2, please enter your name:");
@@ -56,33 +76,64 @@ public class Game {
             player1Turn = !player1Turn;
         }while (!isGameOver(player1, player2));
 
-        System.out.println("Game Over!");
-
-
-
     }
-    private void mainMenu(){
-        System.out.println("Select an option :");
+    private void gameTypeMenu(){
+        System.out.println("******** Game Type ********");
+        System.out.println("1.Classic");
+        System.out.println("2.Advanced");
+        System.out.println("3.Back to main menu");
+        System.out.println("****************************");
+        System.out.print("Enter your choice:");
+        do {
+            switch (inputInt.nextInt()) {
+                case 1:
+                    modeMenu();
+                    return;
+                case 2:
+                    // advancedMode
+                    return;
+                case 3:
+                    mainMenu();
+                default:
+                    System.out.print("Invalid choice, try again:");
+            }
+        }while (true);
+    }
+    private void modeMenu(){
+        System.out.println("******** Game Mode ********");
         System.out.println("1. 1 VS (AI)  [Single Mode]");
         System.out.println("2. 1 VS 1 [Versus Mode]");
-        int option = inputInt.nextInt();
-        if (option == 1) singleMode();
-        else {
-            if (option == 2) versusMode();
-            else {
-                System.out.println("Invalid option. Try again.");
-                mainMenu();
+        System.out.println("3. Back to game type menu");
+        System.out.println("****************************");
+        System.out.print("Enter your choice:");
+        do {
+            switch (inputInt.nextInt()) {
+                case 1:
+                    singleMode();
+                    return;
+                case 2:
+                    versusMode();
+                    return;
+                case 3:
+                    gameTypeMenu();
+                    return;
+                default:
+                    System.out.print("Invalid choice, try again:");
             }
-        }
+        }while (true);
     }
-    private int gridSizeMenu(){
+    private void gridSizeSetting(){
         System.out.println("What should be the dimensions of the game's grid? (note that grid size must be between 5 and 27): ");
         int GRID_SIZE = inputInt.nextInt();
         if (GRID_SIZE <= 5 || GRID_SIZE >= 27) {
             System.out.println("Invalid dimensions. Try again.");
-            gridSizeMenu();
+            gridSizeSetting();
         }
-        return GRID_SIZE;
+        else {
+            System.out.println("Grid size updated successfully.");
+            System.out.println("Grid size is " + GRID_SIZE+"X"+GRID_SIZE);
+            this.GRID_SIZE = GRID_SIZE;
+        }
     }
 
     private boolean isGameOver(Player player1, Player player2) {
@@ -100,15 +151,67 @@ public class Game {
         System.out.println(player.getPlayerName()+", Choose one of the options below to place ships: ");
         System.out.println("1. Place Ship Randomly");
         System.out.println("2. Place Ship Manually");
-        int option = inputInt.nextInt();
-        if (option == 1) Utils.placeShipRandomly(player);
-        else{
-            if (option == 2) Utils.placeShipManually(player);
-            else {
-                System.out.println("Invalid option. Try again.");
-                choosePlaceShipMenu(player);
+        System.out.println("Enter your choice:");
+        do {
+            int option = inputInt.nextInt();
+            switch (option) {
+                case 1:
+                    Utils.placeShipRandomly(player);
+                    return;
+                case 2:
+                    Utils.placeShipManually(player);
+                    return;
+                default:
+                    System.out.print("Invalid option. Try again:");
             }
-        }
+        }while (true);
+    }
+    private void mainMenu(){
+        System.out.println("***** Welcome to Battle Ship Game! *****");
+        System.out.println("1.Play Game");
+        System.out.println("2.Settings");
+        System.out.println("3.Exit");
+        System.out.println("*****************************************");
+        System.out.print("Enter your choice:");
+        do {
+            int option = inputInt.nextInt();
+            switch (option) {
+                case 1:
+                    boolean playAgain;
+                    do {
+                        playGame();
+                        playAgain = askReplay();
+                    } while (playAgain);
+                    return;
+                case 2:
+                    settings();
+                    return;
+                case 3:
+                    return;
+                default:
+                    System.out.print("Invalid choice. Try again:");
+            }
+        }while (true);
+
+    }
+    private void settings(){
+        System.out.println("******** Settings ********");
+        System.out.println("1.Grid Size Setting");
+        System.out.println("2.Back to Main Menu");
+        System.out.println("****************************");
+        System.out.print("Enter your choice:");
+        do {
+            switch (inputInt.nextInt()) {
+                case 1:
+                    gridSizeSetting();
+                    return;
+                case 2:
+                    mainMenu();
+                    return;
+                default:
+                    System.out.print("Invalid choice. Try again:");
+            }
+        }while (true);
     }
 
 }
