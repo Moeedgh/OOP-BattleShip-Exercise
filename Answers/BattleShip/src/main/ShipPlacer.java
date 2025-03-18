@@ -21,11 +21,11 @@ public class ShipPlacer {
         Coordinate coordinate;
         System.out.println("Your Board :");
         board.printBoard();
-        System.out.print("\nShip's size :"+ship.getSize());
+        System.out.println("\nShip's size :"+ship.getSize());
         do {
             System.out.println("Please enter a valid coordinate that you want to place ship:");
             String coord = scanner.next();
-            if (Utils.isValidInput(coord)) {
+            if (Utils.isValidInput(coord,board.getSize())) {
                 coordinate = new Coordinate(coord);
                 if (coordinate.isWater(board)) {
                     break;
@@ -39,9 +39,12 @@ public class ShipPlacer {
             }
         }while (true);
 
-
+        System.out.println("************************** Pay Attention **************************");
+        System.out.println("In placing the ship vertically, the ship is positioned facing down");
+        System.out.println("In placing the ship horizontally, the ship is positioned facing right");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         do {
-            System.out.println("PLace Ship horizontal or vertical ? ( 'H' for horizontal ship and 'V' for vertical ship) ");
+            System.out.println("PLace Ship horizontal or vertical ? ( 'H' for place horizontal and 'V' for place vertical ) ");
             char inputChar = scanner.next().charAt(0);
             if (inputChar == 'H') {
                 horizontal = true;

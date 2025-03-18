@@ -32,6 +32,7 @@ public class Coordinate {
                             System.out.println("Excellent!! a Ship of size "+ship.getSize()+" sank!");
                             ship.shipSunkEffect(trackingGrid);
                         }
+                        break;
                     }
                 }
 

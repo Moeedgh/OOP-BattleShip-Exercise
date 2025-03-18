@@ -4,7 +4,7 @@ import java.util.Random;
 public class Board {
     private char[][] grid;
     private final int size;
-    public static ArrayList<Ship> ships= new ArrayList<>();
+    private ArrayList<Ship> ships= new ArrayList<>();
 
     public Board(int size) {
         this.size = size;
@@ -48,7 +48,7 @@ public class Board {
         return ships;
     }
 
-    public static void generateShips(int size) {
+    public void generateShips() {
         final int[] SHIP_SIZES = {2,3,4,5,6};
         final double SHIP_AREA_RATIO = 0.25;
         int totalBoardArea = size * size;
@@ -61,6 +61,7 @@ public class Board {
                 i=0;
             int shipSize = SHIP_SIZES[i];
             if (shipSize > totalShipArea) {
+                i++;
                 continue;
             }
             Ship ship = new Ship(shipSize);
@@ -90,10 +91,8 @@ public class Board {
                     grid[row+i][col]='X';
                 }
                 for(int i=0;i<ship.getSize();i++) {
-                    for(int j=0;j<2;j++) {
                         shipPosition[i][0]=row+i;
                         shipPosition[i][1]=col;
-                    }
                 }
                 ship.setShipPosition(shipPosition);
                 return true;

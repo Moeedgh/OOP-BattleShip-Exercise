@@ -22,7 +22,7 @@ public class Player {
         System.out.print("Enter target (for example B1):");
         String target = scanner.next();
         Coordinate coordinate= new Coordinate(target);
-        if(Utils.isValidInput(target)) {
+        if(Utils.isValidInput(target,GRID_SIZE)) {
             if (coordinate.isWater(playerTrackingGrid)){// if hit , player shot again.
                 if(coordinate.attack(opponentGrid,playerTrackingGrid)){
                     if(opponentGrid.allShipSunk()){

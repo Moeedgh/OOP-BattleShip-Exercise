@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 public class Utils {
 
-    public static boolean isValidInput(String input) {
+    public static boolean isValidInput(String input,int gridSize) {
         if (input.length() != 2) return false;
         char col = input.charAt(0);
         char row = input.charAt(1);
-        return (col >= 'A' && col <= 'J') && (row >= '0' && row <= '9');
+        return (col >= 'A' && col <= (char)('A'+gridSize-1)) && (row >= '0' && row <= (char)('0'+gridSize-1));
     }
     public static void placeShipRandomly(Player player){// Utils
         for (Ship ship : player.playerGrid.getShips()) {
@@ -17,6 +17,7 @@ public class Utils {
     }
     public static void placeShipManually(Player player){//Utils
         System.out.println("********* PLACING SHIP MANUALLY *********");
+        Utils.shipsInfo(player.playerGrid);
         for (Ship ship : player.playerGrid.getShips()) {
             ShipPlacer.placeShipManually(player.playerGrid,ship);
         }
@@ -25,7 +26,7 @@ public class Utils {
         Scanner input = new Scanner(System.in);
         int[] countShips= new int[6];
         countShips=Utils.countShips(board.getShips());
-        System.out.println("*********** Pay attention **********");
+        System.out.println("*********** Pay Attention **********");
         System.out.print("Ship Size :");
         System.out.printf("%25s", "Number of Ships :");
         System.out.println();
