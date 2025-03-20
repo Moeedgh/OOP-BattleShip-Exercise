@@ -91,7 +91,6 @@ public class Game {
         choosePlaceShipMenu(player2);
         Utils.shipsInfo(player1.playerGrid);
         boolean player1Turn = true;
-        player2.playerGrid.printBoard();
          do{
             if (player1Turn) {
                 System.out.println(player1.getPlayerName()+"'s turn:");
