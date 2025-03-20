@@ -44,7 +44,6 @@ public class SpecialAttack {
             System.out.println("Invalid input, please try again.");
             radarScan(opponentGrid,trackingGrid);
         }
-        sc.close();
     }
 
     public static void multiStrike(Board opponentGrid,Board trackingGrid ) {
@@ -93,7 +92,6 @@ public class SpecialAttack {
             System.out.println("Invalid input, please try again.");
             multiStrike(opponentGrid,trackingGrid);
         }
-        sc.close();
     }
 
     public boolean isHasRunRadar() {

@@ -114,6 +114,6 @@ public class AIPlayer extends Player {
         } else {
             aiTurn(opponentGrid);
         }
-        scanner.close();
+
     }
 }

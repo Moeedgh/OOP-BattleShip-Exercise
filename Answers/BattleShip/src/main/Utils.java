@@ -63,7 +63,6 @@ public class Utils {
         }
         System.out.println("************************************");
         input.nextLine();
-        input.close();
     }
     private static int[] countShips(ArrayList<Ship> ships){
         int[] countShips = {0,0,0,0,0,0};

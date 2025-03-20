@@ -63,7 +63,7 @@ public class Player {
             }
         }
         System.out.print("Enter target (for example B1):");
-        String target = scanner.nextLine();
+        String target = scanner.next();
         if(Utils.isValidInput(target,GRID_SIZE)) {
             Coordinate coordinate= new Coordinate(target);
             if (coordinate.isWater(playerTrackingGrid)){// if hit , player shot again.
