@@ -2,10 +2,19 @@ public class Coordinate {
     private int row;
     private int col;
     public Coordinate(String target) {
-        char colChar = target.charAt(0);
-        char rowChar = target.charAt(1);
-        this.row=rowChar-'0';
-        this.col=colChar-'A';
+        char colChar;
+        char rowChar;
+        if (target.length() == 2) {
+            colChar = target.charAt(0);
+            rowChar = target.charAt(1);
+            this.row = rowChar - '0';
+            this.col = colChar - 'A';
+        } else {
+            colChar = target.charAt(0);
+            this.col = colChar - 'A';
+            String Row = target.substring(1, 3);
+            this.row = Integer.parseInt(Row);
+        }
     }
 
     public int getRow() {
@@ -39,7 +48,9 @@ public class Coordinate {
             }
             opponentGrid.setGrid(opponetBoard);
             trackingGrid.setGrid(trackingBoard);
-            System.out.println("Nice! as a bonus, you get another shot!");
+            if(!opponentGrid.allShipSunk()) {
+                System.out.println("Nice! as a bonus, you get another shot!");
+            }
             return true;
 
         }

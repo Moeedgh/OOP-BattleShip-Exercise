@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Board {
     private char[][] grid;
@@ -30,17 +29,38 @@ public class Board {
         }
     }
     public void printBoard() {
-        System.out.print("  ");
-        for (int i = 65; i < 65+size; i++) {
-            System.out.print((char) i + " ");
-        }
-        System.out.println();
-        for (int i = 0; i < size; i++) {
-            System.out.print(i + " ");
-            for (int j = 0; j < size; j++) {
-                System.out.print(grid[i][j] + " ");
+        if (size<=10){
+            System.out.print("  ");
+            for (int i = 65; i < 65+size; i++) {
+                System.out.print((char) i + " ");
             }
             System.out.println();
+            for (int i = 0; i < size; i++) {
+                System.out.print(i + " ");
+                for (int j = 0; j < size; j++) {
+                    System.out.print(grid[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+        else {
+            System.out.print("   ");
+            for (int i = 65; i < 65+size; i++) {
+                System.out.print((char) i + " ");
+            }
+            System.out.println();
+            for (int i = 0; i < size; i++) {
+                if(i<10){
+                    System.out.print(i + "  ");
+                }
+                else {
+                    System.out.print(i + " ");
+                }
+                for (int j = 0; j < size; j++) {
+                    System.out.print(grid[i][j] + " ");
+                }
+                System.out.println();
+            }
         }
     }
 

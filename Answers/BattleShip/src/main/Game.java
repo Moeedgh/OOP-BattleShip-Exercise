@@ -1,8 +1,10 @@
 import java.util.Scanner;
 public class Game {
     private int GRID_SIZE=10;
+    private boolean advancedMode=false;
     private Scanner scanner = new Scanner(System.in);
     private Scanner inputInt = new Scanner(System.in);
+    private Scanner pause = new Scanner(System.in);
     public void start() {
         mainMenu();
         System.out.println("GAME OVER!");
@@ -21,7 +23,10 @@ public class Game {
         do {
             System.out.println("Please enter your name:");
             playerName = scanner.nextLine();
-        }while (playerName.isEmpty());
+            if (playerName.isBlank()){
+                System.out.println("Name cannot be empty!! 😡");
+            }
+        }while (playerName.isBlank());
         Player player = new Player(playerName, GRID_SIZE);
         AIPlayer aiPlayer= new AIPlayer("AI",GRID_SIZE);
         player.playerGrid.initializeGrid();
@@ -31,7 +36,6 @@ public class Game {
         player.playerGrid.generateShips();
         aiPlayer.playerGrid.generateShips();
         choosePlaceShipMenu(player);
-        player.playerGrid.printBoard();
         Utils.placeShipRandomly(aiPlayer);
         Utils.shipsInfo(player.playerGrid);
         boolean playerTurn = true;
@@ -39,11 +43,13 @@ public class Game {
             if (playerTurn) {
                 System.out.println(player.getPlayerName()+"'s turn:");
                 player.playerTrackingGrid.printBoard();
-                player.playerTurn(aiPlayer.playerGrid);
+                player.playerTurn(aiPlayer.playerGrid,advancedMode);
+                pause.nextLine();
             } else {
                 System.out.println(aiPlayer.getPlayerName()+"'s turn:");
                 aiPlayer.playerTrackingGrid.printBoard();
                 aiPlayer.aiTurn(player.playerGrid);
+                pause.nextLine();
             }
             playerTurn = !playerTurn;
         }while (!isGameOver(player, aiPlayer));
@@ -55,15 +61,15 @@ public class Game {
         do {
             System.out.println("Player1, please enter your name:");
             player1Name = scanner.nextLine();
-            if(player1Name.isEmpty()){
+            if(player1Name.isBlank()){
                 System.out.println("Name cannot be empty!! 😡");
             }
-        }while (player1Name.isEmpty());
+        }while (player1Name.isBlank());
         String player2Name;
         do{
             System.out.println("Player2, please enter your name:");
             player2Name=scanner.nextLine();
-            if(player2Name.isEmpty()){
+            if(player2Name.isBlank()){
                 System.out.println("Name cannot be empty!! 😡");
             }
             if(player1Name.equals(player2Name)){
@@ -85,17 +91,18 @@ public class Game {
         choosePlaceShipMenu(player2);
         Utils.shipsInfo(player1.playerGrid);
         boolean player1Turn = true;
-        player1.playerGrid.printBoard();
         player2.playerGrid.printBoard();
          do{
             if (player1Turn) {
                 System.out.println(player1.getPlayerName()+"'s turn:");
                 player1.playerTrackingGrid.printBoard();
-                player1.playerTurn(player2.playerGrid);
+                player1.playerTurn(player2.playerGrid,advancedMode);
+                pause.nextLine();
             } else {
                 System.out.println(player2.getPlayerName()+"'s turn:");
                 player2.playerTrackingGrid.printBoard();
-                player2.playerTurn(player1.playerGrid);
+                player2.playerTurn(player1.playerGrid,advancedMode);
+                pause.nextLine();
             }
             player1Turn = !player1Turn;
         }while (!isGameOver(player1, player2));
@@ -114,7 +121,9 @@ public class Game {
                     modeMenu();
                     return;
                 case 2:
-                    // advancedMode
+                    advancedMode=true;
+                    GRID_SIZE=10;
+                    modeMenu();
                     return;
                 case 3:
                     mainMenu();
@@ -148,6 +157,7 @@ public class Game {
         }while (true);
     }
     private void gridSizeSetting(){
+        System.out.println("************* Grid Size Setting *************");
         System.out.println("Grid size = 10");
         System.out.println("Dimensions of the game's grid is 10 X 10");
         System.out.println("What should be the dimensions of the game's grid? (note that grid size must be between 5 and 27): ");
@@ -160,7 +170,7 @@ public class Game {
             System.out.println("Grid size updated successfully.");
             System.out.println("Now, Dimensions of the game's grid is : " + GRID_SIZE+" X "+GRID_SIZE);
             this.GRID_SIZE = GRID_SIZE;
-            scanner.nextLine();
+            pause.nextLine();
         }
     }
 

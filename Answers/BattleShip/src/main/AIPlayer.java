@@ -36,14 +36,27 @@ public class AIPlayer extends Player {
     private String targetShip() {
         if (potentialTargets.isEmpty()) {
             String lastHit = hitCoordinates.getLast();
-            int row = lastHit.charAt(1) - '0';
-            int col = lastHit.charAt(0) - 'A';
+            if(lastHit.length()==2){
+                int row = lastHit.charAt(1) - '0';
+                int col = lastHit.charAt(0) - 'A';
 
 
-            if (row > 0) potentialTargets.add("" + (char) ('A' + col) + (row - 1));
-            if (row < gridSize - 1) potentialTargets.add("" + (char) ('A' + col) + (row + 1));
-            if (col > 0) potentialTargets.add("" + (char) ('A' + (col - 1)) + row);
-            if (col < gridSize - 1) potentialTargets.add("" + (char) ('A' + (col + 1)) + row);
+                if (row > 0) potentialTargets.add("" + (char) ('A' + col) + (row - 1));
+                if (row < gridSize - 1) potentialTargets.add("" + (char) ('A' + col) + (row + 1));
+                if (col > 0) potentialTargets.add("" + (char) ('A' + (col - 1)) + row);
+                if (col < gridSize - 1) potentialTargets.add("" + (char) ('A' + (col + 1)) + row);
+            }
+            else{
+                String Row = lastHit.substring(1,3);
+                int row = Integer.parseInt(Row);
+                int col = lastHit.charAt(0) - 'A';
+
+
+                if (row > 0) potentialTargets.add("" + (char) ('A' + col) + (row - 1));
+                if (row < gridSize - 1) potentialTargets.add("" + (char) ('A' + col) + (row + 1));
+                if (col > 0) potentialTargets.add("" + (char) ('A' + (col - 1)) + row);
+                if (col < gridSize - 1) potentialTargets.add("" + (char) ('A' + (col + 1)) + row);
+            }
         }
 
         String target;
@@ -65,9 +78,9 @@ public class AIPlayer extends Player {
     public void aiTurn(Board opponentGrid) {
         Scanner scanner = new Scanner(System.in);
         String target = makeMove();
-        Coordinate coordinate = new Coordinate(target);
         boolean shipSunk = false;
         if (Utils.isValidInput(target,gridSize)) {
+            Coordinate coordinate = new Coordinate(target);
             if (coordinate.isWater(playerTrackingGrid)) {
                 if (coordinate.attack(opponentGrid, playerTrackingGrid)) {
                     for (Ship ship : opponentGrid.getShips()) {
@@ -96,11 +109,11 @@ public class AIPlayer extends Player {
                 }
             } else {
                 recordMiss(target);
-//                System.out.println("These coordinates have been entered, please enter a valid coordinate.");
                 aiTurn(opponentGrid);
             }
         } else {
             aiTurn(opponentGrid);
         }
+        scanner.close();
     }
 }

@@ -5,10 +5,34 @@ import java.util.Scanner;
 public class Utils {
 
     public static boolean isValidInput(String input,int gridSize) {
-        if (input.length() != 2) return false;
-        char col = input.charAt(0);
-        char row = input.charAt(1);
-        return (col >= 'A' && col <= (char)('A'+gridSize-1)) && (row >= '0' && row <= (char)('0'+gridSize-1));
+        char col;
+        char row;
+        String Row;
+        if(input.isBlank()){
+            return false;
+        }
+        switch (input.length()) {
+            case 2:
+                col = input.charAt(0);
+                row = input.charAt(1);
+                if(!Character.isDigit(row)){
+                    return false;
+                }
+                return (col >= 'A' && col <= (char)('A'+gridSize-1)) && (row >= '0' && row <= (char)('0'+gridSize-1));
+            case 3:
+                col = input.charAt(0);
+                Row = input.substring(1,3);
+                for (char c : Row.toCharArray()) {
+                    if (!Character.isDigit(c)) {
+                        return false;
+                    }
+                }
+                int x = Integer.parseInt(Row);
+                return (col >= 'A' && col <= (char)('A'+gridSize-1)) && (x >= 0 && x < gridSize);
+            default:
+                return false;
+        }
+
     }
     public static void placeShipRandomly(Player player){// Utils
         for (Ship ship : player.playerGrid.getShips()) {
@@ -39,6 +63,7 @@ public class Utils {
         }
         System.out.println("************************************");
         input.nextLine();
+        input.close();
     }
     private static int[] countShips(ArrayList<Ship> ships){
         int[] countShips = {0,0,0,0,0,0};
