@@ -29,38 +29,20 @@ public class Board {
         }
     }
     public void printBoard() {
-        if (size<=10){
-            System.out.print("  ");
-            for (int i = 65; i < 65+size; i++) {
-                System.out.print((char) i + " ");
-            }
-            System.out.println();
-            for (int i = 0; i < size; i++) {
-                System.out.print(i + " ");
-                for (int j = 0; j < size; j++) {
-                    System.out.print(grid[i][j] + " ");
-                }
-                System.out.println();
-            }
+        System.out.print("   ");
+        for (int i = 65; i < 65+size; i++) {
+            System.out.print((char) i + " ");
         }
-        else {
-            System.out.print("   ");
-            for (int i = 65; i < 65+size; i++) {
-                System.out.print((char) i + " ");
+        System.out.println();
+        for (int i = 0; i < size; i++) {
+            if(i<10)
+                System.out.print(i + "  ");
+            else
+                System.out.print(i + " ");
+            for (int j = 0; j < size; j++) {
+                System.out.print(grid[i][j] + " ");
             }
             System.out.println();
-            for (int i = 0; i < size; i++) {
-                if(i<10){
-                    System.out.print(i + "  ");
-                }
-                else {
-                    System.out.print(i + " ");
-                }
-                for (int j = 0; j < size; j++) {
-                    System.out.print(grid[i][j] + " ");
-                }
-                System.out.println();
-            }
         }
     }
 
